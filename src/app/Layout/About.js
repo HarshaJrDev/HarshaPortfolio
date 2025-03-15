@@ -19,7 +19,7 @@ const About = () => {
 <Image
   width={200}
   height={200}
-  src="/images/Image.png"
+  src="/Image.png"
   className="w-full h-full object-cover"
   alt="Image"
 />

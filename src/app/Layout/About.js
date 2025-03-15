@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub, FaDownload, FaEye } from "react-icons/fa";
+import Image from "next/image";
 
 const About = () => {
   return (
@@ -12,11 +13,16 @@ const About = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1 }}
       >
-        <img
-          src="/OwnImage.jpeg" // Replace with actual image path
-          alt="Harsha Vardhan"
-          className="w-full h-full object-cover"
-        />
+
+
+<Image
+  width={200}
+  height={200}
+  src="/Ownimage.jpeg" // No need for "./" or "public/"
+  alt="Harsha Vardhan"
+  className="w-full h-full object-cover"
+/>
+
       </motion.div>
 
       {/* Right Section: About Me */}

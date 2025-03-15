@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub, FaDownload, FaEye } from "react-icons/fa";
+import Image from "next/image";
 
 
 const About = () => {
@@ -15,7 +16,7 @@ const About = () => {
       >
 
 
-<img
+<Image
   width={200}
   height={200}
   src="/Ownimage.jpeg"

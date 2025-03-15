@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaDatabase, FaGithub, FaAndroid, FaApple, FaServer } from "react-icons/fa";
+import { FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaGithub, FaAndroid, FaApple, FaServer } from "react-icons/fa";
 import { SiNextdotjs, SiMongodb, SiMysql, SiExpress, SiRedux, SiTailwindcss, SiFirebase, SiPostman, SiSupabase, SiXcode, SiAndroidstudio, SiFigma } from "react-icons/si";
 import { motion } from "framer-motion";
 import { FaCode } from "react-icons/fa6";

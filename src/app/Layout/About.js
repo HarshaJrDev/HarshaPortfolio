@@ -33,7 +33,7 @@ const About = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          Hi, I'm Harsha Vardhan
+          Hi, Im Harsha Vardhan
         </motion.h1>
 
         <motion.p

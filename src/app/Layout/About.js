@@ -18,9 +18,9 @@ const About = () => {
 <Image
   width={200}
   height={200}
-  src="/Ownimage.jpeg" // No need for "./" or "public/"
-  alt="Harsha Vardhan"
+  src="/Ownimage.jpeg"
   className="w-full h-full object-cover"
+  alt="Image"
 />
 
       </motion.div>

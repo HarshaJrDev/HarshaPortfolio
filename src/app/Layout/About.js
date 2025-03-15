@@ -15,7 +15,7 @@ const About = () => {
       >
 
 
-<Image
+<img
   width={200}
   height={200}
   src="/Ownimage.jpeg"

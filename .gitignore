@@ -32,7 +32,6 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-React_Native Ravuri_HarshaVardhan.pdf
 
 # env files (can opt-in for committing if needed)
 .env*

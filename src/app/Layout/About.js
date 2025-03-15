@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaLinkedin, FaGithub, FaDownload, FaEye } from "react-icons/fa";
-import Image from "next/image";
+
 
 const About = () => {
   return (

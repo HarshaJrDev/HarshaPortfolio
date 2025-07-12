@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 
@@ -6,31 +6,31 @@ const projects = [
   {
     name: "E-commerce Mobile App",
     description:
-      "Developed a full-stack e-commerce application using React Native and MERN. Implemented user authentication with JWT, real-time database using MongoDB Functions, and a seamless shopping experience.",
+      "Full-stack React Native app with MERN backend. Includes JWT authentication, MongoDB functions, and a smooth shopping experience.",
     link: "https://drive.google.com/drive/folders/1E74UdmFMMwmGq4IYzy8pPClHe-NnUAIy?usp=sharing",
   },
   {
-    name: "Food Delivery with Admin Panel",
+    name: "Food Delivery + Admin Panel",
     description:
-      "Built a food delivery app with an admin panel using React Native and Firebase. Features include real-time order tracking, secure payments via Razorpay, and efficient order management for admins.",
+      "React Native + Firebase-based app. Real-time tracking, Razorpay payments, and admin order management dashboard.",
     link: "https://your-link-to-food-delivery-app.com",
   },
   {
     name: "Plan to Travel",
     description:
-      "Designed a travel planning app using the MERN stack with React Native. Integrated AI chatbot (Gemini), geolocation services, and real-time updates for a seamless booking experience.",
+      "MERN + React Native travel planner. Includes AI chatbot (Gemini), geolocation, and real-time trip updates.",
     link: "https://your-link-to-plan-to-travel.com",
   },
   {
     name: "Logistics Mobile App",
     description:
-      "Developed a cross-platform logistics app with real-time order tracking, Google Maps integration, push notifications, and offline support using Firebase Firestore.",
+      "Cross-platform logistics app with live order tracking, push notifications, and offline support using Firebase.",
     link: "https://drive.google.com/file/d/12SU804zzYv24-ks1Ct_f6O0Rx8_3Hr0l/view?usp=sharing",
   },
   {
     name: "NexaLink",
     description:
-      "Created an event management app using React Native. Features include social authentication via Auth0, real-time discussions, and offline support for seamless event engagement.",
+      "React Native event manager with Auth0 social login, real-time chats, and offline capabilities.",
     link: "https://your-link-to-nexalink.com",
   },
 ];
@@ -39,7 +39,7 @@ const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.2,
+      staggerChildren: 0.15,
     },
   },
 };
@@ -49,53 +49,54 @@ const cardVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const Projects = () => {
+const Projects = forwardRef((props, ref) => {
   return (
-    <motion.div
-      className="p-10 bg-gray-900 text-white min-h-screen"
+    <motion.section
+      ref={ref}
+      className="bg-gradient-to-tr from-black via-gray-900 to-gray-950 text-white py-20 px-4 sm:px-6 md:px-12 font-poppins"
       initial="hidden"
-      animate="visible"
+      whileInView="visible"
       variants={containerVariants}
+      viewport={{ once: true }}
     >
-      <motion.h3
-        className="text-3xl font-semibold mb-6 text-center"
+      <motion.h2
+        className="text-4xl md:text-5xl font-bold text-center mb-16 text-orange-400"
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        Projects
-      </motion.h3>
+        🚀 Projects
+      </motion.h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {projects.map((project, index) => (
           <motion.div
             key={index}
             variants={cardVariants}
-            className="group p-6 bg-gray-800 border-l-4 border-orange-500 rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.05] hover:bg-gray-700"
-            whileHover={{ y: -5 }}
+            className="group bg-white/5 p-6 rounded-2xl backdrop-blur-md border border-white/10 hover:border-orange-400 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:bg-white/10"
           >
-            <h4 className="text-2xl font-semibold text-orange-400 flex items-center gap-2">
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline inline-flex items-center gap-1"
-              >
-                {project.name}
-                <ExternalLink
-                  size={18}
-                  className="text-orange-300 transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </a>
-            </h4>
-            <p className="text-gray-300 mt-2 transition-opacity duration-300">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-lg font-semibold text-orange-400 mb-2 hover:underline"
+            >
+              {project.name}
+              <ExternalLink
+                size={18}
+                className="ml-1 text-orange-300 group-hover:translate-x-1 transition-transform duration-300"
+              />
+            </a>
+            <p className="text-sm text-gray-300 leading-relaxed">
               {project.description}
             </p>
           </motion.div>
         ))}
       </div>
-    </motion.div>
+    </motion.section>
   );
-};
+});
+
+Projects.displayName = "Projects";
 
 export default Projects;

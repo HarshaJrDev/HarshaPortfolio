@@ -4,34 +4,33 @@ import { ExternalLink } from "lucide-react";
 
 const projects = [
   {
+    name: "HubbleMeet",
+    description:
+      "Identity-based professional networking app with swipe-to-connect discovery, QR-based virtual business cards, 30–60s pitch videos, real-time chat, and subscription-based access control.",
+    link: "https://play.google.com/store/apps/details?id=com.hubble.app",
+  },
+  {
+    name: "HubbleMeet (iOS)",
+    description:
+      "iOS version of HubbleMeet published on the App Store, delivering the same identity-driven networking experience with optimized performance for iOS devices.",
+    link: "https://apps.apple.com/in/app/hubblemeet/id6752544354",
+  },
+  {
+    name: "Dandar Patient App",
+    description:
+      "Healthcare and telemedicine app enabling doctor appointment booking, online consultations, real-time chat, and medicine ordering with secure patient data handling.",
+    link: "https://play.google.com/store/apps/details?id=com.dandarpatient&hl=en",
+  },
+  {
+    name: "Donor Driver App",
+    description:
+      "Logistics and routing app built with React Native CLI and Mapbox, supporting multi-stop navigation, real-time task updates, and backend synchronization.",
+  },
+  {
     name: "E-commerce Mobile App",
     description:
-      "Full-stack React Native app with MERN backend. Includes JWT authentication, MongoDB functions, and a smooth shopping experience.",
+      "Full-stack React Native e-commerce app with MERN backend, JWT authentication, MongoDB integration, and a smooth end-to-end shopping experience.",
     link: "https://drive.google.com/drive/folders/1E74UdmFMMwmGq4IYzy8pPClHe-NnUAIy?usp=sharing",
-  },
-  {
-    name: "Food Delivery + Admin Panel",
-    description:
-      "React Native + Firebase-based app. Real-time tracking, Razorpay payments, and admin order management dashboard.",
-    link: "https://your-link-to-food-delivery-app.com",
-  },
-  {
-    name: "Plan to Travel",
-    description:
-      "MERN + React Native travel planner. Includes AI chatbot (Gemini), geolocation, and real-time trip updates.",
-    link: "https://your-link-to-plan-to-travel.com",
-  },
-  {
-    name: "Logistics Mobile App",
-    description:
-      "Cross-platform logistics app with live order tracking, push notifications, and offline support using Firebase.",
-    link: "https://drive.google.com/file/d/12SU804zzYv24-ks1Ct_f6O0Rx8_3Hr0l/view?usp=sharing",
-  },
-  {
-    name: "NexaLink",
-    description:
-      "React Native event manager with Auth0 social login, real-time chats, and offline capabilities.",
-    link: "https://your-link-to-nexalink.com",
   },
 ];
 

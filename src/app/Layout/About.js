@@ -29,7 +29,7 @@ const techStack = [
   { icon: <SiTailwindcss />, color: "text-sky-400" },
 ];
 
-const About = forwardRef((props, ref) => {
+const About = forwardRef(function About(_, ref) {
   return (
     <div
       ref={ref}
@@ -50,6 +50,7 @@ const About = forwardRef((props, ref) => {
             width={320}
             height={320}
             className="rounded-full w-full h-full object-cover"
+            priority
           />
         </div>
 
@@ -76,9 +77,8 @@ const About = forwardRef((props, ref) => {
         viewport={{ once: true }}
         transition={{ duration: 1 }}
       >
-        {/* Name + Tagline */}
         <h1 className="text-4xl sm:text-5xl font-extrabold whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-300">
-          Hi, I'm Harsha Vardhan
+          Hi, I&apos;m Harsha Vardhan
         </h1>
 
         <div className="text-base sm:text-lg text-gray-400 font-medium">
@@ -86,7 +86,8 @@ const About = forwardRef((props, ref) => {
         </div>
 
         <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-          Crafting high-performance apps with delightful UI. I specialize in building full-stack mobile & web applications that scale.
+          Crafting high-performance apps with delightful UI. I specialize in
+          building full-stack mobile &amp; web applications that scale.
         </p>
 
         {/* Freelancing & Projects Info */}
@@ -102,13 +103,14 @@ const About = forwardRef((props, ref) => {
         </div>
 
         <p className="text-sm italic text-gray-500">
-          “I don't just write code. I engineer user experiences.”
+          &ldquo;I don&apos;t just write code. I engineer user
+          experiences.&rdquo;
         </p>
 
         {/* Terminal style */}
         <div className="bg-black border border-gray-700 rounded-xl p-4 font-mono text-green-400 text-sm shadow-inner w-full mt-2">
-          <p className="text-green-500"> harsha.run()</p>
-          <p>// Developing fullstack applications 💚</p>
+          <p className="text-green-500">harsha.run()</p>
+          <p>{"// Developing fullstack applications 💚"}</p>
         </div>
 
         {/* Resume Buttons */}
@@ -116,11 +118,13 @@ const About = forwardRef((props, ref) => {
           <a
             href="/React_Native Ravuri_HarshaVardhan.pdf"
             target="_blank"
+            rel="noreferrer"
             className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-400 text-black font-semibold rounded-full shadow hover:scale-105 transition"
           >
             <FaEye />
             View Resume
           </a>
+
           <a
             href="/React_Native Ravuri_HarshaVardhan.pdf"
             download="React_Native Ravuri_HarshaVardhan.pdf"
@@ -136,6 +140,7 @@ const About = forwardRef((props, ref) => {
           <a
             href="https://linkedin.com/in/ravuri-harshavardhan-52220726b"
             target="_blank"
+            rel="noreferrer"
             className="hover:text-blue-500 transition"
           >
             <FaLinkedin />
@@ -143,6 +148,7 @@ const About = forwardRef((props, ref) => {
           <a
             href="https://github.com/HarshaJrDev"
             target="_blank"
+            rel="noreferrer"
             className="hover:text-gray-300 transition"
           >
             <FaGithub />
@@ -152,7 +158,5 @@ const About = forwardRef((props, ref) => {
     </div>
   );
 });
-
-About.displayName = "About";
 
 export default About;

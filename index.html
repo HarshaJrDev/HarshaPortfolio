@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harsha — Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05050a;
+  --fg:#f5f0ff;
+  --p1:#b8ff4f;
+  --p2:#ff2d78;
+  --p3:#00e5ff;
+  --p4:#ffb800;
+  --glass:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'Space Grotesk',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+/* CURSOR */
+#blob{
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(184,255,79,0.12),rgba(0,229,255,0.06),transparent 70%);
+  border-radius:50%;
+  position:fixed;pointer-events:none;z-index:0;
+  transform:translate(-50%,-50%);
+  transition:left 0.6s cubic-bezier(0.23,1,0.32,1),top 0.6s cubic-bezier(0.23,1,0.32,1),width 0.4s,height 0.4s;
+  filter:blur(20px);
+}
+#dot{
+  width:8px;height:8px;background:var(--p1);border-radius:50%;
+  position:fixed;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:left 0.05s,top 0.05s,transform 0.3s,background 0.3s;
+  mix-blend-mode:screen;
+}
+/* NOISE */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity:0.025;pointer-events:none;z-index:1000;
+}
+/* LOADER */
+#loader{
+  position:fixed;inset:0;background:var(--bg);z-index:9000;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:24px;
+  transition:opacity 0.6s,visibility 0.6s;
+}
+#loader.done{opacity:0;visibility:hidden}
+.loader-text{font-family:'Fragment Mono',monospace;font-size:13px;color:var(--p1);letter-spacing:4px}
+.loader-bar-wrap{width:200px;height:2px;background:rgba(255,255,255,0.05);border-radius:99px;overflow:hidden}
+.loader-bar{height:100%;background:linear-gradient(90deg,var(--p1),var(--p3));width:0%;transition:width 0.05s linear}
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 40px;
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  background:rgba(5,5,10,0.6);transition:transform 0.4s;
+}
+.nav-logo{font-family:'Fragment Mono',monospace;font-size:14px;color:var(--p1);letter-spacing:3px;cursor:none}
+.nav-pill{display:flex;gap:4px;background:var(--glass);border:1px solid var(--border);border-radius:99px;padding:6px}
+.nav-pill a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:1px;padding:8px 18px;border-radius:99px;transition:all 0.3s;cursor:none}
+.nav-pill a:hover,.nav-pill a.active{background:var(--p1);color:#000}
+.nav-status{display:flex;align-items:center;gap:8px;font-family:'Fragment Mono',monospace;font-size:11px;color:#555}
+.status-dot{width:6px;height:6px;background:var(--p1);border-radius:50%;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+/* HERO */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:0 40px;position:relative;overflow:hidden;
+}
+.mesh{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 20% 50%,rgba(184,255,79,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 80% 20%,rgba(0,229,255,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 60% 80%,rgba(255,45,120,0.05) 0%,transparent 60%);
+  animation:meshMove 12s ease-in-out infinite alternate;
+}
+@keyframes meshMove{0%{transform:scale(1) rotate(0)}100%{transform:scale(1.1) rotate(3deg)}}
+.float-shape{
+  position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,0.05);
+  animation:floatShape 15s linear infinite;
+}
+.float-shape:nth-child(2){width:400px;height:400px;top:-100px;right:-100px;animation-duration:20s}
+.float-shape:nth-child(3){width:200px;height:200px;bottom:100px;left:5%;animation-duration:15s;animation-direction:reverse;border-color:rgba(184,255,79,0.1)}
+.float-shape:nth-child(4){width:100px;height:100px;top:40%;left:30%;animation-duration:10s;border-color:rgba(0,229,255,0.1)}
+@keyframes floatShape{0%{transform:rotate(0deg) translate(20px,0) rotate(0deg)}100%{transform:rotate(360deg) translate(20px,0) rotate(-360deg)}}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--glass);border:1px solid var(--border);border-radius:99px;
+  padding:8px 18px;font-family:'Fragment Mono',monospace;font-size:11px;
+  color:var(--p1);letter-spacing:3px;text-transform:uppercase;margin-bottom:40px;width:fit-content;
+  opacity:0;animation:slideIn 0.8s ease forwards 0.2s;
+}
+.hero-name{
+  font-size:clamp(56px,10vw,160px);font-weight:700;line-height:0.88;
+  letter-spacing:-3px;margin-bottom:20px;position:relative;z-index:2;
+  opacity:0;animation:slideIn 0.9s ease forwards 0.4s;
+}
+.word-2{
+  color:transparent;-webkit-text-stroke:1.5px var(--p2);display:block;
+}
+.word-3{color:var(--fg);display:block}
+.glitch{position:relative;display:inline-block;cursor:none}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%}
+.glitch::before{color:var(--p3);clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%);animation:glitch1 4s steps(1) infinite}
+.glitch::after{color:var(--p2);clip-path:polygon(0 65%,100% 65%,100% 80%,0 80%);animation:glitch2 4s steps(1) infinite}
+@keyframes glitch1{0%,90%,100%{transform:translateX(0);opacity:0}92%{transform:translateX(-3px);opacity:1}94%{transform:translateX(3px);opacity:1}96%{transform:translateX(-2px);opacity:1}98%{transform:translateX(0);opacity:0}}
+@keyframes glitch2{0%,88%,100%{transform:translateX(0);opacity:0}90%{transform:translateX(3px);opacity:1}93%{transform:translateX(-3px);opacity:1}96%{transform:translateX(1px);opacity:1}98%{transform:translateX(0);opacity:0}}
+.hero-role{font-size:clamp(14px,2vw,18px);color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:1px;margin-bottom:60px;opacity:0;animation:slideIn 0.9s ease forwards 0.7s}
+.hero-role span{color:var(--p3)}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;opacity:0;animation:slideIn 0.9s ease forwards 1s}
+.hero-desc{max-width:420px;font-size:15px;line-height:1.8;color:rgba(255,255,255,0.35);font-weight:300}
+.hero-btns{display:flex;gap:12px;flex-shrink:0}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;padding:14px 28px;
+  font-size:13px;font-weight:600;letter-spacing:0.5px;text-decoration:none;
+  border-radius:12px;cursor:none;transition:all 0.35s cubic-bezier(0.23,1,0.32,1);
+  position:relative;overflow:hidden;font-family:'Space Grotesk',sans-serif;
+}
+.btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.1);transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.23,1,0.32,1)}
+.btn:hover::before{transform:translateY(0)}
+.btn:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+.btn-primary{background:var(--p1);color:#000}
+.btn-ghost{background:var(--glass);color:var(--fg);border:1px solid var(--border);backdrop-filter:blur(10px)}
+.scroll-ind{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-family:'Fragment Mono',monospace;font-size:9px;color:#333;letter-spacing:4px;text-transform:uppercase;
+  opacity:0;animation:fadeIn 1s ease forwards 1.5s;
+}
+.scroll-mouse{width:22px;height:36px;border:1px solid #333;border-radius:99px;display:flex;align-items:flex-start;justify-content:center;padding-top:6px}
+.scroll-mouse-dot{width:3px;height:8px;background:#555;border-radius:99px;animation:scrollDown 2s ease-in-out infinite}
+@keyframes scrollDown{0%{transform:translateY(0);opacity:1}100%{transform:translateY(12px);opacity:0}}
+@keyframes slideIn{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{to{opacity:1}}
+/* TICKER */
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;background:linear-gradient(90deg,rgba(184,255,79,0.03),rgba(0,229,255,0.03));position:relative;z-index:2}
+.ticker{display:flex;gap:0;animation:tick 30s linear infinite;width:max-content}
+.ticker-item{display:flex;align-items:center;gap:40px;padding-right:40px;font-family:'Fragment Mono',monospace;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.25);white-space:nowrap;text-transform:uppercase}
+.ticker-item strong{color:var(--p1);font-weight:400}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* SECTIONS */
+section{padding:120px 40px;position:relative;z-index:2}
+.s-label{font-family:'Fragment Mono',monospace;font-size:10px;color:var(--p3);letter-spacing:5px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.s-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--p3),transparent);max-width:60px}
+.s-title{font-size:clamp(42px,6vw,80px);font-weight:700;line-height:1;letter-spacing:-2px;margin-bottom:64px}
+/* ABOUT */
+#about{background:linear-gradient(180deg,transparent,rgba(0,229,255,0.02),transparent)}
+.about-grid{display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:start}
+.about-text{font-size:22px;line-height:1.75;color:rgba(255,255,255,0.6);font-weight:300}
+.about-text strong{color:var(--fg);font-weight:700}
+.about-text em{color:var(--p1);font-style:normal}
+.stats-col{display:flex;flex-direction:column;gap:2px}
+.stat-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:28px;
+  backdrop-filter:blur(10px);transition:all 0.4s cubic-bezier(0.23,1,0.32,1);cursor:none;position:relative;overflow:hidden;
+}
+.stat-card:hover{transform:scale(1.02) translateX(-4px);border-color:rgba(184,255,79,0.3)}
+.stat-card:hover .stat-n{color:var(--p1)}
+.stat-n{font-size:52px;font-weight:700;color:var(--fg);line-height:1;letter-spacing:-2px;transition:color 0.4s}
+.stat-l{font-family:'Fragment Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+/* SKILLS */
+#skills{background:linear-gradient(180deg,transparent,rgba(255,45,120,0.02),transparent)}
+.skills-container{display:flex;flex-direction:column;gap:2px}
+.skill-row{
+  display:grid;grid-template-columns:180px 1fr auto;align-items:center;gap:32px;
+  padding:28px 32px;background:var(--glass);border:1px solid var(--border);border-radius:14px;
+  cursor:none;transition:all 0.4s cubic-bezier(0.23,1,0.32,1);position:relative;overflow:hidden;
+}
+.skill-row::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--row-color,var(--p1));transform:scaleY(0);transition:transform 0.4s cubic-bezier(0.23,1,0.32,1);border-radius:0 3px 3px 0}
+.skill-row:hover{background:rgba(255,255,255,0.06);transform:translateX(6px);border-color:rgba(255,255,255,0.15)}
+.skill-row:hover::after{transform:scaleY(1)}
+.skill-row:hover .skill-row-name{color:var(--row-color,var(--p1))}
+.skill-row-name{font-family:'Fragment Mono',monospace;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;transition:color 0.4s}
+.skill-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:12px;font-weight:500;padding:6px 14px;border-radius:99px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);transition:all 0.25s;cursor:none}
+.chip:hover{background:var(--chip-color,var(--p1));color:#000;border-color:transparent;transform:scale(1.05)}
+.skill-row-icon{font-size:24px;opacity:0.2;transition:opacity 0.3s}
+.skill-row:hover .skill-row-icon{opacity:0.8}
+/* EXPERIENCE */
+#experience{background:linear-gradient(180deg,transparent,rgba(184,255,79,0.02),transparent)}
+.exp-timeline{display:flex;flex-direction:column;gap:2px}
+.exp-card{background:var(--glass);border:1px solid var(--border);border-radius:20px;overflow:hidden;cursor:none;transition:border-color 0.4s}
+.exp-card:hover{border-color:rgba(184,255,79,0.25)}
+.exp-card-header{display:flex;justify-content:space-between;align-items:center;padding:32px 36px;cursor:none;user-select:none}
+.exp-card-left{display:flex;flex-direction:column;gap:6px}
+.exp-company-name{font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.exp-meta-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.exp-badge{font-family:'Fragment Mono',monospace;font-size:10px;padding:4px 10px;border-radius:99px;letter-spacing:2px;text-transform:uppercase}
+.badge-green{background:rgba(184,255,79,0.1);color:var(--p1);border:1px solid rgba(184,255,79,0.2)}
+.badge-blue{background:rgba(0,229,255,0.1);color:var(--p3);border:1px solid rgba(0,229,255,0.2)}
+.exp-period-text{font-family:'Fragment Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px}
+.exp-toggle{width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;color:rgba(255,255,255,0.5);transition:all 0.4s;flex-shrink:0;line-height:1}
+.exp-card.open .exp-toggle{background:var(--p1);color:#000;border-color:var(--p1);transform:rotate(45deg)}
+.exp-card-body{max-height:0;overflow:hidden;transition:max-height 0.6s cubic-bezier(0.23,1,0.32,1)}
+.exp-card.open .exp-card-body{max-height:800px}
+.exp-card-body-inner{padding:0 36px 36px;display:flex;flex-direction:column;gap:16px}
+.exp-project-item{display:flex;gap:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:20px;transition:all 0.3s}
+.exp-project-item:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.08)}
+.project-num{font-family:'Fragment Mono',monospace;font-size:11px;color:var(--p1);opacity:0.4;flex-shrink:0;padding-top:2px}
+.project-title{font-size:15px;font-weight:600;margin-bottom:6px}
+.project-desc{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6}
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.project-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:32px;
+  cursor:none;transition:all 0.5s cubic-bezier(0.23,1,0.32,1);position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.project-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--card-glow,rgba(184,255,79,0.08)),transparent 60%);opacity:0;transition:opacity 0.4s}
+.project-card:hover::before{opacity:1}
+.project-card:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-6px)}
+.project-card.featured{grid-column:span 2}
+.card-emoji{font-size:36px;margin-bottom:20px;display:block;transition:transform 0.4s}
+.project-card:hover .card-emoji{transform:scale(1.2) rotate(-5deg)}
+.card-label{font-family:'Fragment Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:10px}
+.card-title{font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:12px;transition:color 0.3s}
+.project-card:hover .card-title{color:var(--card-accent,var(--p1))}
+.card-desc{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7;margin-bottom:24px}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px}
+.card-tag{font-family:'Fragment Mono',monospace;font-size:9px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.3);letter-spacing:1px}
+.card-arrow{position:absolute;top:28px;right:28px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.3);transition:all 0.4s cubic-bezier(0.23,1,0.32,1)}
+.project-card:hover .card-arrow{background:var(--card-accent,var(--p1));color:#000;border-color:transparent;transform:rotate(-45deg) scale(1.1)}
+/* CONTACT */
+#contact{text-align:center;background:linear-gradient(180deg,transparent,rgba(255,45,120,0.03),transparent)}
+.contact-giant{font-size:clamp(48px,12vw,180px);font-weight:700;letter-spacing:-5px;line-height:0.85;margin-bottom:60px}
+.line-2{color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.15)}
+.line-3{background:linear-gradient(90deg,var(--p1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.contact-row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:80px}
+.contact-pill{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;border-radius:99px;font-size:13px;font-weight:600;text-decoration:none;cursor:none;transition:all 0.35s cubic-bezier(0.23,1,0.32,1);border:1px solid var(--border);background:var(--glass);color:var(--fg);backdrop-filter:blur(10px);font-family:'Space Grotesk',sans-serif}
+.contact-pill:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 20px 40px rgba(0,0,0,0.5)}
+.contact-pill.green{background:var(--p1);color:#000;border-color:var(--p1)}
+.contact-pill.green:hover{box-shadow:0 20px 40px rgba(184,255,79,0.25)}
+.contact-pill.pink:hover{background:var(--p2);border-color:var(--p2);box-shadow:0 20px 40px rgba(255,45,120,0.25)}
+.contact-pill.blue:hover{background:var(--p3);border-color:var(--p3);color:#000;box-shadow:0 20px 40px rgba(0,229,255,0.25)}
+/* FOOTER */
+footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;background:rgba(5,5,10,0.8)}
+.footer-left{font-family:'Fragment Mono',monospace;font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px}
+.footer-left span{color:var(--p1)}
+.footer-right{font-family:'Fragment Mono',monospace;font-size:11px;color:rgba(255,255,255,0.15);letter-spacing:1px}
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.delay-1{transition-delay:0.1s}
+.delay-2{transition-delay:0.2s}
+.delay-3{transition-delay:0.3s}
+.delay-4{transition-delay:0.4s}
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-pill{display:none}
+  section{padding:80px 20px}
+  #hero{padding:0 20px}
+  .hero-bottom{flex-direction:column;gap:28px;align-items:flex-start}
+  .about-grid{grid-template-columns:1fr}
+  .stats-col{flex-direction:row;flex-wrap:wrap}
+  .stat-card{flex:1;min-width:140px}
+  .skill-row{grid-template-columns:1fr;gap:12px}
+  .skill-row-icon{display:none}
+  .projects-grid{grid-template-columns:1fr}
+  .project-card.featured{grid-column:span 1}
+  footer{flex-direction:column;gap:12px;text-align:center}
+  .contact-giant{letter-spacing:-2px}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-text">INITIALIZING...</div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
+</div>
+
+<div id="blob"></div>
+<div id="dot"></div>
+
+<nav id="nav">
+  <div class="nav-logo">HARSHA.DEV</div>
+  <div class="nav-pill">
+    <a href="#about">About</a>
+    <a href="#skills">Stack</a>
+    <a href="#experience">Work</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    Available for work
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="mesh"></div>
+  <div class="float-shape"></div>
+  <div class="float-shape"></div>
+  <div class="float-shape"></div>
+
+  <div class="hero-tag"><span>✦</span> React Native Developer</div>
+
+  <h1 class="hero-name">
+    <span class="glitch" data-text="RAVURI">RAVURI</span>
+    <span class="word-2 glitch" data-text="HARSHA">HARSHA</span>
+    <span class="word-3">VARDHAN</span>
+  </h1>
+
+  <p class="hero-role">Building <span>React Native</span> apps &amp; full-stack products · Android × iOS × Web</p>
+
+  <div class="hero-bottom">
+    <p class="hero-desc">Shipping pixels to production — mobile apps, APIs, and everything in between</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn btn-primary">Let's talk →</a>
+      <a href="#experience" class="btn btn-ghost">View work</a>
+    </div>
+  </div>
+
+  <div class="scroll-ind">
+    <div class="scroll-mouse"><div class="scroll-mouse-dot"></div></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item"><strong>React Native</strong> · <span>Android &amp; iOS</span> · <strong>Node.js</strong> · <span>TypeScript</span> · <span>SQL</span> · <strong>Firebase</strong> · <span>Redux</span> · <strong>CI/CD</strong> · <span>Play Store</span> · <strong>App Store</strong> · <span>MongoDB</span> · <span>Express</span> </div> 
+    <div class="ticker-item"><strong>React Native</strong> · <span>Android &amp; iOS</span> · <strong>Node.js</strong> · <span>TypeScript</span> · <span>SQL</span> · <strong>Firebase</strong> · <span>Redux</span> · <strong>CI/CD</strong> · <span>Play Store</span> · <strong>App Store</strong> · <span>MongoDB</span> · <span>Express</span></div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="s-label reveal">Who I am</div>
+  <div class="s-title reveal delay-1">About</div>
+  <div class="about-grid">
+    <div class="about-text reveal delay-2">
+      I'm a <strong>React Native Developer</strong> with <em>1.5+ years</em> of building apps that people actually use.<br><br>
+      Specializing in <strong>React Native</strong> for Android &amp; iOS, plus full-stack with <strong>Node.js + MongoDB + Firebase + Supabase </strong>I've built it, tested it, deployed it, and maintained it.<br><br>
+      Clean code. <strong>Real products. Live in production.</strong>
+    </div>
+    <div class="stats-col reveal delay-3">
+      <div class="stat-card">
+        <div class="stat-n" data-target="1.5" data-suffix="+">0</div>
+        <div class="stat-l">Years of experience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n" data-target="2" data-suffix="+">0</div>
+        <div class="stat-l">Apps shipped live</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n" data-target="2">0</div>
+        <div class="stat-l">Companies</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="s-label reveal">What I use</div>
+  <div class="s-title reveal delay-1">Tech Stack</div>
+  <div class="skills-container reveal delay-2">
+    <div class="skill-row" style="--row-color:var(--p1)">
+      <div class="skill-row-name">Languages</div>
+      <div class="skill-chips">
+        <span class="chip" style="--chip-color:var(--p1)">JavaScript</span>
+        <span class="chip" style="--chip-color:var(--p1)">TypeScript</span>
+        <span class="chip" style="--chip-color:var(--p1)">HTML</span>
+        <span class="chip" style="--chip-color:var(--p1)">CSS</span>
+      </div>
+      <div class="skill-row-icon">💻</div>
+    </div>
+    <div class="skill-row" style="--row-color:var(--p3)">
+      <div class="skill-row-name">Frontend</div>
+      <div class="skill-chips">
+        <span class="chip" style="--chip-color:var(--p3)">React.js</span>
+        <span class="chip" style="--chip-color:var(--p3)">React Native</span>
+        <span class="chip" style="--chip-color:var(--p3)">Redux</span>
+        <span class="chip" style="--chip-color:var(--p3)">Zustand</span>
+        <!-- <span class="chip" style="--chip-color:var(--p3)">Vue.js</span> -->
+      </div>
+      <div class="skill-row-icon">🎨</div>
+    </div>
+    <div class="skill-row" style="--row-color:var(--p2)">
+      <div class="skill-row-name">Backend</div>
+      <div class="skill-chips">
+        <span class="chip" style="--chip-color:var(--p2)">Node.js</span>
+        <!-- <span class="chip" style="--chip-color:var(--p2)">NestJS</span> -->
+        <span class="chip" style="--chip-color:var(--p2)">Express.js</span>
+        <!-- <span class="chip" style="--chip-color:var(--p2)">MongoDB</span> -->
+        <span class="chip" style="--chip-color:var(--p2)">REST APIs</span>
+      </div>
+      <div class="skill-row-icon">⚙️</div>
+    </div>
+    <div class="skill-row" style="--row-color:var(--p4)">
+      <div class="skill-row-name">Database &amp; Test</div>
+      <div class="skill-chips">
+        <!-- <span class="chip" style="--chip-color:var(--p4)">PostgreSQL</span> -->
+        <span class="chip" style="--chip-color:var(--p4)">SQL</span>
+          <span class="chip" style="--chip-color:var(--p2)">MongoDB</span>
+        <!-- <span class="chip" style="--chip-color:var(--p4)">Jest</span>
+        <span class="chip" style="--chip-color:var(--p4)">Enzyme</span> -->
+      </div>
+      <div class="skill-row-icon">🗄️</div>
+    </div>
+    <div class="skill-row" style="--row-color:#ff6b35">
+      <div class="skill-row-name">DevOps &amp; Mobile</div>
+      <div class="skill-chips">
+        <span class="chip" style="--chip-color:#ff6b35">CI/CD</span>
+        <!-- <span class="chip" style="--chip-color:#ff6b35">Argo CD</span>
+        <span class="chip" style="--chip-color:#ff6b35">SonarQube</span>
+        <span class="chip" style="--chip-color:#ff6b35">AKS</span> -->
+        <span class="chip" style="--chip-color:#ff6b35">Android Studio</span>
+        <span class="chip" style="--chip-color:#ff6b35">Xcode</span>
+        <span class="chip" style="--chip-color:#ff6b35">Play Console</span>
+        <span class="chip" style="--chip-color:#ff6b35">App Store Connect</span>
+      </div>
+      <div class="skill-row-icon">🚀</div>
+    </div>
+    <div class="skill-row" style="--row-color:#ff9500">
+      <div class="skill-row-name">Firebase &amp; Cloud</div>
+      <div class="skill-chips">
+        <span class="chip" style="--chip-color:#ff9500">Push Notifications</span>
+        <span class="chip" style="--chip-color:#ff9500">Analytics</span>
+        <span class="chip" style="--chip-color:#ff9500">App Check</span>
+        <span class="chip" style="--chip-color:#ff9500">Crashlytics</span>
+        <span class="chip" style="--chip-color:#ff9500">Google Auth</span>
+      </div>
+      <div class="skill-row-icon">🔥</div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="s-label reveal">Career</div>
+  <div class="s-title reveal delay-1">Experience</div>
+
+  <div class="exp-timeline reveal delay-2">
+
+    <!-- Techefficio -->
+    <div class="exp-card">
+      <div class="exp-card-header">
+        <div class="exp-card-left">
+          <div class="exp-company-name">Techefficio</div>
+          <div class="exp-meta-row">
+            <span class="exp-badge badge-green">Current</span>
+            <span class="exp-badge badge-blue">React Native Developer</span>
+            <span class="exp-period-text">Feb 2026 – Present</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Algorizz -->
+    <div class="exp-card">
+      <div class="exp-card-header">
+        <div class="exp-card-left">
+          <div class="exp-company-name">Algorizz Technologies</div>
+          <div class="exp-meta-row">
+            <span class="exp-badge badge-blue">React Native Developer</span>
+            <span class="exp-period-text">May 2025 – Dec 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WebSeeder -->
+    <div class="exp-card">
+      <div class="exp-card-header">
+        <div class="exp-card-left">
+          <div class="exp-company-name">WebSeeder Technologies</div>
+          <div class="exp-meta-row">
+            <span class="exp-badge badge-blue">React Native Developer</span>
+            <span class="exp-period-text">Apr 2025 – May 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bliptyn -->
+    <div class="exp-card">
+      <div class="exp-card-header">
+        <div class="exp-card-left">
+          <div class="exp-company-name">Bliptyn Technologies</div>
+          <div class="exp-meta-row">
+            <span class="exp-badge badge-blue">React Native Developer</span>
+            <span class="exp-period-text">Dec 2024 – Mar 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WebMOBI Internship -->
+    <div class="exp-card">
+      <div class="exp-card-header">
+        <div class="exp-card-left">
+          <div class="exp-company-name">WebMOBI</div>
+          <div class="exp-meta-row">
+            <span class="exp-badge badge-blue">Internship</span>
+            <span class="exp-badge badge-blue">React Native</span>
+            <span class="exp-period-text">Aug 2024 – Dec 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="projects">
+  <div class="s-label reveal">Portfolio</div>
+  <div class="s-title reveal delay-1">Projects</div>
+  <div class="projects-grid">
+    <div class="project-card featured reveal" style="--card-glow:rgba(184,255,79,0.08);--card-accent:var(--p1)">
+      <div class="card-arrow">↗</div>
+      <!-- <span class="card-emoji">🛍️</span> -->
+      <div class="card-label">Mobile · Play Store · App Store</div>
+      <div class="card-title">HubbleMeet</div>
+      <div class="card-desc">HubbleMeet is a next-generation professional networking app enabling one-to-one connections through QR-based
+digital business cards and 30–60 second pitch videos.</div>
+      <div class="card-tags"><span class="card-tag">React Native</span><span class="card-tag">Firebase</span><span class="card-tag">Redux</span><span class="card-tag">Node.js</span></div>
+    </div>
+    <div class="project-card reveal delay-1" style="--card-glow:rgba(0,229,255,0.08);--card-accent:var(--p3)">
+      <div class="card-arrow">↗</div>
+      <!-- <span class="card-emoji">💸</span> -->
+      <!-- <div class="card-label">Affiliate · Android &amp; iOS</div>
+      <div class="card-title">GrabCash</div>
+      <div class="card-desc">Affiliate earnings platform with real-time commission tracking and e-commerce deal sharing.</div>
+      <div class="card-tags"><span class="card-tag">React Native</span><span class="card-tag">NestJS</span></div>
+    </div> -->
+    <div class="project-card reveal delay-1" style="--card-glow:rgba(255,45,120,0.08);--card-accent:var(--p2)">
+      <div class="card-arrow">↗</div>
+      <!-- <span class="card-emoji">📲</span> -->
+      <div class="card-label">Health</div>
+      <div class="card-title">Dandar Patient App</div>
+      <div class="card-desc">All-in-one health companion app to book doctor appointments, consult online, and order medicines.</div>
+      <div class="card-tags"><span class="card-tag">React Native</span><span class="card-tag">Firebase</span></div><span class="card-tag">Auth</span></div>
+      <span class="card-tag">Video SDK</span></div>
+    </div>
+    <div class="project-card reveal delay-2" style="--card-glow:rgba(255,184,0,0.08);--card-accent:var(--p4)">
+      <div class="card-arrow">↗</div>
+      <span class="card-emoji">👓</span>
+      <div class="card-label">Transport</div>
+      <div class="card-title">Donor Driver App</div>
+      <div class="card-desc">Logistics & Routing Platform.</div>
+      <div class="card-tags"><span class="card-tag">React Native</span><span class="card-tag">MapBox SDK</span><span class="card-tag">Expo</span></div>
+    </div>
+  
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-giant reveal">
+    <div>LET'S</div>
+    <div class="line-2">BUILD</div>
+    <div class="line-3">TOGETHER</div>
+  </div>
+  <div class="contact-row reveal delay-2">
+    <a href="mailto:ravuriharsha01@gmail.com" class="contact-pill green">✉ Email me</a>
+    <a href="tel:9866352083" class="contact-pill pink">📞 +91 8712900170</a>
+    <a href="https://www.linkedin.com/in/ravuri-harshavardhan-52220726b/" target="_blank" class="contact-pill blue">in LinkedIn</a>
+    <a href="https://harsha-portfolio-kappa.vercel.app" target="_blank" class="contact-pill">↗ Portfolio</a>
+  </div>
+  <p class="reveal delay-3" style="color:rgba(255,255,255,0.2);font-family:'Fragment Mono',monospace;font-size:11px;letter-spacing:3px">HYDERABAD, INDIA · OPEN TO REMOTE</p>
+</section>
+
+<footer>
+  <div class="footer-left">© 2026 <span>RAVURI HARSHA VARDHAN</span></div>
+  <div class="footer-right">REACT NATIVE DEVELOPER</div>
+</footer>
+
+<script>
+// LOADER
+const bar = document.getElementById('loaderBar');
+const loader = document.getElementById('loader');
+let prog = 0;
+const iv = setInterval(() => {
+  prog += Math.random() * 18;
+  if (prog >= 100) { prog = 100; clearInterval(iv); setTimeout(() => loader.classList.add('done'), 300); }
+  bar.style.width = prog + '%';
+}, 80);
+
+// CURSOR
+const blob = document.getElementById('blob');
+const dot = document.getElementById('dot');
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX + 'px';
+  dot.style.top = e.clientY + 'px';
+  blob.style.left = e.clientX + 'px';
+  blob.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.project-card,.skill-row,.stat-card,.exp-card-header,.contact-pill,.btn,.chip').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    dot.style.transform = 'translate(-50%,-50%) scale(3)';
+    dot.style.background = 'var(--p3)';
+    blob.style.width = '500px'; blob.style.height = '500px';
+  });
+  el.addEventListener('mouseleave', () => {
+    dot.style.transform = 'translate(-50%,-50%) scale(1)';
+    dot.style.background = 'var(--p1)';
+    blob.style.width = '300px'; blob.style.height = '300px';
+  });
+});
+
+// EXP TOGGLE
+function toggleExp(id) { document.getElementById(id).classList.toggle('open'); }
+
+// 3D TILT
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `perspective(1000px) rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`;
+    card.style.setProperty('--mx', (x+0.5)*100+'%');
+    card.style.setProperty('--my', (y+0.5)*100+'%');
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+// SCROLL REVEAL
+const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// COUNTERS
+const cObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const isDecimal = target % 1 !== 0;
+    const start = performance.now();
+    const step = ts => {
+      const p = Math.min((ts - start) / 1200, 1);
+      const ease = 1 - Math.pow(1-p, 3);
+      const cur = target * ease;
+      el.textContent = (isDecimal ? cur.toFixed(1) : Math.floor(cur)) + (p >= 1 ? suffix : '');
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+    cObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-n[data-target]').forEach(el => cObs.observe(el));
+
+// SCRAMBLE
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+document.querySelectorAll('.glitch').forEach(el => {
+  const orig = el.dataset.text;
+  el.addEventListener('mouseenter', () => {
+    let i = 0;
+    const iv = setInterval(() => {
+      el.textContent = orig.split('').map((c,idx) => idx < i ? orig[idx] : chars[Math.floor(Math.random()*chars.length)]).join('');
+      if (i >= orig.length) clearInterval(iv);
+      i += 1.5;
+    }, 30);
+  });
+});
+
+// NAV HIDE
+let lastY = 0;
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  navEl.style.transform = y > lastY && y > 120 ? 'translateY(-100%)' : 'translateY(0)';
+  lastY = y;
+}, { passive: true });
+
+// NAV ACTIVE
+const secs = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('.nav-pill a');
+new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+}), { threshold: 0.5 }).observe || secs.forEach(s => new IntersectionObserver(([e]) => {
+  if (e.isIntersecting) links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + s.id));
+}, { threshold: 0.5 }).observe(s));
+</script>
+</body>
+</html>
